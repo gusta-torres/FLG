@@ -1,6 +1,13 @@
 import { NextRequest } from "next/server";
 
-const API_BASE = process.env.API_INTERNAL_URL ?? "http://localhost:8000";
+function resolveApiBase(): string {
+  const raw = process.env.API_INTERNAL_URL ?? "";
+  if (!raw) return "http://localhost:8000";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return `http://${raw}`;
+}
+
+const API_BASE = resolveApiBase();
 
 type Ctx = { params: Promise<{ path: string[] }> };
 
