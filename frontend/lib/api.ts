@@ -13,7 +13,9 @@ import type {
   User,
 } from "./types";
 
-const API_URL = "/api/v1";
+// Em produção (Netlify) aponta direto para a API via NEXT_PUBLIC_API_URL.
+// Em desenvolvimento, usa o proxy same-origin (/api/v1).
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
 
 const TOKEN_KEY = "flg.token";
 const USER_KEY = "flg.user";

@@ -236,7 +236,7 @@ class FLGService:
             raise ValueError("Post não encontrado.")
         item.status = status
         if status == ContentStatus.POSTADO and item.posted_at is None:
-            item.posted_at = datetime.now(timezone.utc)
+            item.posted_at = datetime.now(timezone.utc).replace(tzinfo=None)
         await db.commit()
         await db.refresh(item)
         return item

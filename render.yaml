@@ -1,25 +1,19 @@
-# Blueprint do Render: cria a API e o app (frontend) automaticamente.
-# Ao usar "New > Blueprint" apontando para este repositório, o Render lê este
-# arquivo, cria os dois serviços e pede apenas os segredos marcados com sync: false.
+# Blueprint do Render para a API (backend).
+# O frontend é publicado separadamente no Netlify.
+# O banco é Postgres externo (ex.: Neon) — informe a string em DATABASE_URL.
 services:
   - type: web
     name: flg-api
     runtime: docker
-    plan: starter
+    plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     autoDeploy: true
-    disk:
-      name: flg-data
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: LLM_PROVIDER
         value: deepseek
       - key: DEEPSEEK_MODEL
         value: deepseek-chat
-      - key: DATABASE_URL
-        value: sqlite+aiosqlite:////data/flg.db
       - key: DEEPSEEK_API_KEY
         sync: false
       - key: JWT_SECRET
@@ -28,17 +22,7 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
-
-  - type: web
-    name: flg-web
-    runtime: docker
-    plan: starter
-    rootDir: frontend
-    dockerfilePath: Dockerfile
-    autoDeploy: true
-    envVars:
-      - key: API_INTERNAL_URL
-        fromService:
-          type: web
-          name: flg-api
-          property: url
+      - key: DATABASE_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
